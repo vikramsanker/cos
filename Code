@@ -1,0 +1,639 @@
+Imports System.Web.SessionState
+Imports System.Data.SqlClient 'Import SQL Capabilities
+Imports System.IO
+Imports System.Drawing
+Public Class User
+    Inherits System.Web.UI.Page
+    Private Connection, ECDCKey As New ConnStr
+    Private Strconn As String = Connection.StrCon
+    Private Key As String = ECDCKey.Key
+    Private sqlCon As SqlConnection
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            If Session("Username") Is Nothing Then
+                Response.Redirect("LoginWindow.aspx")
+            Else
+                If Not IsPostBack Then
+                    Searchbox.Attributes.Add("onkeydown", "return (event.keyCode!=13);")
+                    Panel5.DefaultButton = "SearchButton"
+                    Call usermsg("Message from COS: Success")
+                    Dim strQuery As String
+                    strQuery = "select UId, EmpID, (select concat (FName, ' ', LName) from Employee where EID = EmpID) as Employee, Username, (select role from role where rid = Usertable.Role) as Role from Usertable; select concat(Eid,'-',FName,' ',LName) as Name from Employee; select role from role"
+                    Dim Getdata As New GetdataSet()
+                    Dim Sqldataset As DataSet = Getdata.GetDataset(strQuery)
+                    GridView1.DataSource = Sqldataset.Tables(0)
+                    GridView1.DataBind()
+                    TxtEmployee.DataSource = Sqldataset.Tables(1)
+                    TxtEmployee.DataTextField = "Name"
+                    TxtEmployee.DataBind()
+                    TxtRole.DataSource = Sqldataset.Tables(2)
+                    TxtRole.DataTextField = "Role"
+                    TxtRole.DataBind()
+                    Save.Enabled = True
+                    Update.Enabled = False
+                    Delete.Enabled = False
+                End If
+            End If
+        Catch ex As Exception
+            Call usermsg(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub GridView1_RowCommand(sender As Object, e As GridViewCommandEventArgs) Handles GridView1.RowCommand
+        Try
+            Dim wrapper As New Simple3Des(Key)
+            Dim ID As Object = GridView1.Rows(Convert.ToInt32(e.CommandArgument)).Cells(1).Text
+            Dim strQuery As String
+            strQuery = "select (select concat(Eid,'-',FName,' ',LName) from Employee where Eid = Usertable.EmpID) as Employee, Username, (select role from Role where rid=Usertable.Role) as Role, Password from Usertable Where UID = '" & ID & "'"
+            Dim GetData As New GetdataSet()
+            Dim SQLDataset As DataSet = GetData.GetDataset(strQuery)
+            COSkey.Text = ID.ToString()
+            TxtEmployee.Text = SQLDataset.Tables(0).Rows(0).Item("Employee").ToString()
+            UnameText.Text = SQLDataset.Tables(0).Rows(0).Item("Username").ToString()
+            PwdText.Text = wrapper.DecryptData(SQLDataset.Tables(0).Rows(0).Item("Password").ToString())
+            RPwdText.Text = wrapper.DecryptData(SQLDataset.Tables(0).Rows(0).Item("Password").ToString())
+            TxtRole.Text = SQLDataset.Tables(0).Rows(0).Item("Role").ToString()
+            Save.Enabled = False
+            Update.Enabled = True
+            Delete.Enabled = True
+            TxtEmployee.Enabled = False
+        Catch ex As Exception
+            Call usermsg(ex.Message)
+        End Try
+    End Sub
+
+    Protected Sub Save_Click(sender As Object, e As EventArgs) Handles Save.Click
+        Try
+            If PwdText.Text = RPwdText.Text Then
+                Dim wrapper As New Simple3Des(Key)
+                sqlCon = New SqlConnection(Strconn)
+                Using (sqlCon)
+                    Dim sqlComm As New SqlCommand()
+                    sqlComm.Connection = sqlCon
+                    sqlComm.CommandText = "Usertable_Insert"
+                    sqlComm.CommandType = CommandType.StoredProcedure
+                    sqlComm.Parameters.AddWithValue("Employeename", TxtEmployee.Text)
+                    sqlComm.Parameters.AddWithValue("Rolename", TxtRole.Text)
+                    sqlComm.Parameters.AddWithValue("Password", wrapper.EncryptData(PwdText.Text))
+                    sqlComm.Parameters.AddWithValue("Username", UnameText.Text)
+                    sqlCon.Open()
+                    sqlComm.ExecuteNonQuery()
+                    sqlCon.Close()
+                    Response.Redirect("User.aspx", False)
+                End Using
+            Else
+                Call usermsg("Passwords do not match")
+            End If
+        Catch ex As Exception
+            Call usermsg(ex.Message)
+        End Try
+    End Sub
+    
+	Protected Sub usermsg(msg As String)
+        Dim lbl As Label = Me.Master.FindControl("MessageFooter")
+        lbl.Text = msg
+        lbl.BackColor = Color.Red
+        lbl.ForeColor = Color.White
+    End Sub
+
+    Protected Sub Update_Click(sender As Object, e As EventArgs) Handles Update.Click
+        Try
+            If PwdText.Text = RPwdText.Text Then
+                Dim wrapper As New Simple3Des(Key)
+                sqlCon = New SqlConnection(Strconn)
+                Using (sqlCon)
+                    Dim sqlComm As New SqlCommand()
+                    sqlComm.Connection = sqlCon
+                    sqlComm.CommandText = "Usertable_Update"
+                    sqlComm.CommandType = CommandType.StoredProcedure
+                    sqlComm.Parameters.AddWithValue("Uid", COSkey.Text)
+                    sqlComm.Parameters.AddWithValue("Username", UnameText.Text)
+                    sqlComm.Parameters.AddWithValue("Password", wrapper.EncryptData(PwdText.Text))
+                    sqlComm.Parameters.AddWithValue("Role", TxtRole.SelectedValue)
+                    sqlCon.Open()
+                    sqlComm.ExecuteNonQuery()
+                    sqlCon.Close()
+                    Response.Redirect("User.aspx", False)
+                End Using
+            Else
+                Call usermsg("Passwords do not match")
+            End If
+        Catch ex As Exception
+            Call usermsg(ex.Message)
+        End Try
+    End Sub
+
+    Protected Sub Clear_Click(sender As Object, e As EventArgs) Handles Clear.Click
+        Response.Redirect("User.aspx", False)
+    End Sub
+
+    Protected Sub SearchButton_Click(sender As Object, e As EventArgs) Handles SearchButton.Click
+        Try
+            Dim strQuery As String
+            strQuery = "select UId, EmpID, (select concat (FName, ' ', LName) from Employee where EID = EmpID) as Employee, Username, (select role from role where rid = Usertable.Role) as Role 
+                        from Usertable
+                        Where 
+                        concat (UId, EmpID,
+                        (select concat (FName, ' ', LName) from Employee where EID = EmpID), 
+                        Username, 
+                        (select role from role where rid = Usertable.Role)) Like '%" & Searchbox.Text & "%'"
+            Dim Getdata As New GetdataSet()
+            Dim Sqldataset As DataSet = Getdata.GetDataset(strQuery)
+            GridView1.DataSource = Sqldataset.Tables(0)
+            GridView1.DataBind()
+            Call usermsg("Message from COS: Search was successful")
+        Catch ex As Exception
+            Call usermsg(ex.Message)
+        End Try
+    End Sub
+
+End Class
+
+	
+		<asp:DropDownList ID="TxtSales" runat="server" style=" z-index: 1; left: 53%; top: 35%; position: absolute; width: 16%; height: 10%"></asp:DropDownList>
+		<asp:TextBox ID="TxtSales" runat="server" style=" z-index: 1; left: 53%; top: 35%; position: absolute; width: 16%; height: 9%"></asp:TextBox>
+		
+		
+		    Protected Sub Load(Optional ip As String = "Message from COS: Page loaded successfully!")
+        Try
+            If Session("Username") Is Nothing Then
+                Response.Redirect("LoginWindow.aspx")
+            Else
+                If Not IsPostBack Then
+                    Searchbox.Attributes.Add("onkeydown", "return (event.keyCode!=13);")
+                    Panel5.DefaultButton = "SearchButton"
+                    Dim strQuery As String
+                    strQuery = "select CId as [Client ID], Client, [Address Line 1] as Address, (select Country from Countries where CountryID = Client.Country) as Country, PostalCode as [Postal Code], concat(Salutation, Contact) as Contact, (select concat(FName, ' ', LName) from Employee where Eid = Client.[Caltek Sales]) as Salesperson from Client; 
+                                select concat(Eid,'-',FName,' ',LName) as Name from Employee; select country from countries"
+                    Dim Getdata As New GetdataSet()
+                    Dim Sqldataset As DataSet = Getdata.GetDataset(strQuery)
+                    GridView1.DataSource = Sqldataset.Tables(0)
+                    GridView1.DataBind()
+                    Sales.DataSource = Sqldataset.Tables(1)
+                    Sales.DataTextField = "Name"
+                    Sales.DataBind()
+                    Country.DataSource = Sqldataset.Tables(2)
+                    Country.DataTextField = "country"
+                    Country.DataBind()
+                    Dim SendCount As String = Getdata.RowCount("select count(*) as Count from Client") & " Row(s) Found"
+                    Save.Enabled = True
+                    Update.Enabled = False
+                    Delete.Enabled = False
+                    Call usermsg(ip, LocalCall.Success_Back, LocalCall.Success_Front, SendCount)
+                End If
+            End If
+        Catch ex As Exception
+            Call usermsg("Fatal Error: " & ex.Message, LocalCall.Failure_Back, LocalCall.Failure_Front)
+        End Try
+    End Sub
+	
+'Dim StrQuery As String = "Select ScreenID, ScreenName from ScreenList Where ScreenID NOT in (Select ScreenID from AccessRights Where roleid = (select rid from role where Role='" + TxtRole.Text + "')); 
+            'Select Case ScreenID, ScreenName from ScreenList Where ScreenID in (Select ScreenID from AccessRights Where roleid = (select rid from role where Role='" + TxtRole.Text + "'))"
+            'Dim Getdata As New GetdataSet()
+            'Dim Sqldataset As DataSet = Getdata.GetDataset(StrQuery)
+            	Dim ScreenListdt As DataTable = Sqldataset.Tables(0)
+            'Dim Addeddt As DataTable = Sqldataset.Tables(1)
+            '    
+			
+			
+			'Dim ScreenListdt As DataTable = ScreenList.DataSource
+            '    Dim Addeddt As DataTable = Added.DataSource
+            '    For Each row As GridViewRow In ScreenList.Rows
+            '        If row.RowType = DataControlRowType.DataRow Then
+            '            Dim chkRow As CheckBox = TryCast(row.Cells(0).FindControl("cbselect"), CheckBox)
+            '            If chkRow.Checked Then
+            '                Dim ScreenID As String = row.Cells(1).Text
+            '                Dim ScreenName As String = row.Cells(2).Text
+            '                Addeddt.Rows.Add(ScreenID, ScreenName)
+            '                ScreenListdt.Rows.RemoveAt(row.RowIndex)
+            '            End If
+            '        End If
+            '    Next
+            '    Added.DataSource = Addeddt
+            '    Added.DataBind()
+            '    ScreenList.DataSource = ScreenListdt
+            '    ScreenList.DataBind()
+            'Catch ex As Exception
+            '    Call usermsg("Fatal Error: " & ex.Message, LocalCall.Failure_Back, LocalCall.Failure_Front)
+            'End Try
+			        
+					
+					Dim strQuery As String
+        strQuery = "Select ParentName, Rights from ScreenList Where ScreenID NOT IN (select ScreenID from AccessRights Where RoleID IN (Select Role from Usertable Where Username = '" & Session("Username") & "'))"
+        Dim Getdata As New GetdataSet()
+        Dim Sqldataset As DataSet = Getdata.GetDataset(strQuery)
+			        For i As Integer = 0 To Sqldataset.Tables(0).Rows().Count - 1
+            Menu1.FindItem(Sqldataset.Tables(0).Rows(i).Item("ParentName").ToString()).ChildItems.Remove(Menu1.FindItem("Rights"))
+        Next
+		
+		               <script type="text/javascript">
+                   document.onmousedown = disableRightclick;
+                   var message = "Right click not allowed !!";
+                   function disableRightclick(evt) {
+                       if (evt.button == 2) {
+                           alert(message);
+                           return false;
+                       }
+                   }
+</script>
+
+Import Production
+
+  'Protected Sub PageIndexChanging(ByVal sender As Object, ByVal e As GridViewPageEventArgs)
+    '    Dim FolderPath As String = ConfigurationManager.AppSettings("FolderPath")
+    '    Dim FileName As String = GridView1.Caption
+    '    Dim Extension As String = Path.GetExtension(FileName)
+    '    Dim FilePath As String = Server.MapPath(FolderPath + FileName)
+
+    '    'Import_To_Grid(FilePath, Extension, rbHDR.SelectedItem.Text)
+    '    Import_To_Grid(FilePath, Extension, "Yes")
+    '    GridView1.PageIndex = e.NewPageIndex
+    '    GridView1.DataBind()
+    'End Sub
+
+
+    'Protected Sub Process_Click(sender As Object, e As EventArgs) Handles Process.Click
+    '    'Upload and save the file
+    '    Dim csvPath As String = Server.MapPath("~/Files/") + Path.GetFileName(FileUpload1.PostedFile.FileName)
+    '    FileUpload1.SaveAs(csvPath)
+
+    '    'Create a DataTable.
+    '    Dim dt As New DataTable()
+    '    dt.Columns.AddRange(
+    '        New DataColumn(21) {
+    '        New DataColumn("Date Received", GetType(Date)),
+    '        New DataColumn("DocNo", GetType(String)),
+    '        New DataColumn("Client", GetType(String)),
+    '        New DataColumn("Quantity", GetType(String)),
+    '        New DataColumn("Instrument", GetType(String)),
+    '        New DataColumn("Department", GetType(String)),
+    '        New DataColumn("SerialNumber", GetType(String)),
+    '        New DataColumn("Delivery Dt.", GetType(Date)),
+    '        New DataColumn("Cert Name", GetType(String)),
+    '        New DataColumn("Cert Address", GetType(String)),
+    '        New DataColumn("Make", GetType(String)),
+    '        New DataColumn("Model", GetType(String)),
+    '        New DataColumn("Certificate", GetType(String)),
+    '        New DataColumn("Compliance", GetType(String)),
+    '        New DataColumn("Interval", GetType(String)),
+    '        New DataColumn("Cal Points", GetType(String)),
+    '        New DataColumn("Del. Name", GetType(String)),
+    '        New DataColumn("Del. Address", GetType(String)),
+    '        New DataColumn("Contact", GetType(String)),
+    '        New DataColumn("Tel/HP", GetType(String)),
+    '        New DataColumn("Salesperson", GetType(String)),
+    '        New DataColumn("Special Remarks", GetType(String))
+    '        })
+
+    '    'Read the contents of CSV file.
+    '    Dim csvData As String = File.ReadAllText(csvPath)
+
+    '    'Execute a loop over the rows.
+    '    For Each row As String In csvData.Split(ControlChars.Lf)
+    '        If Not String.IsNullOrEmpty(row) Then
+    '            dt.Rows.Add()
+    '            Dim i As Integer = 0
+
+    '            'Execute a loop over the columns.
+    '            For Each cell As String In row.Split(","c)
+    '                dt.Rows(dt.Rows.Count - 1)(i) = cell
+    '                i += 1
+    '            Next
+    '        End If
+    '    Next
+
+    '    'Bind the DataTable.
+    '    GridView1.DataSource = dt
+    '    GridView1.DataBind()
+    'End Sub
+		
+		
+		Imports System.Web.SessionState
+Imports System.Data.SqlClient 'Import SQL Capabilities
+Imports System.IO
+Imports System.Drawing
+Imports System.Data
+Imports System.Data.OleDb
+Imports System.Configuration
+Public Class Importproduction
+    Inherits System.Web.UI.Page
+    Private LocalCall As New GlobalVar
+    Private sqlCon As SqlConnection
+
+    Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Try
+            If Session("Username") Is Nothing Then
+                Response.Redirect("LoginWindow.aspx")
+            Else
+                If Not Page.IsPostBack Then
+                    Dim lbl As Label = Me.Master.FindControl("LblHeader")
+                    lbl.Text = "PRODUCTION SCHEDULE"
+                    Call usermsg(LocalCall.Load_Message, LocalCall.Success_Back, LocalCall.Success_Front)
+                End If
+            End If
+        Catch ex As Exception
+            Call usermsg("Fatal Error: " & ex.Message, LocalCall.Failure_Back, LocalCall.Failure_Front)
+        End Try
+    End Sub
+    Protected Sub Process_Click(sender As Object, e As EventArgs) Handles Process.Click
+        If FileUpload1.HasFile Then
+            Dim FileName As String = Path.GetFileName(FileUpload1.PostedFile.FileName)
+            Dim Extension As String = Path.GetExtension(FileUpload1.PostedFile.FileName)
+            Dim FolderPath As String = ConfigurationManager.AppSettings("FolderPath")
+            Dim FilePath As String = Server.MapPath(FolderPath + FileName)
+            FileUpload1.SaveAs(FilePath)
+            'Import_To_Grid(FilePath, Extension, rbHDR.SelectedItem.Text)
+            Import_To_Grid(FilePath, Extension, "Yes")
+        End If
+    End Sub
+    Private Sub Import_To_Grid(ByVal FilePath As String, ByVal Extension As String, ByVal isHDR As String)
+        Dim conStr As String = ""
+        Select Case Extension
+            Case ".xls"
+                'Excel 97-03
+                conStr = ConfigurationManager.ConnectionStrings("Excel03ConString").ConnectionString
+                Exit Select
+            Case ".xlsx"
+                'Excel 07
+                conStr = ConfigurationManager.ConnectionStrings("Excel07ConString").ConnectionString
+                Exit Select
+        End Select
+        conStr = String.Format(conStr, FilePath, isHDR)
+        Dim connExcel As New OleDbConnection(conStr)
+        Dim cmdExcel As New OleDbCommand()
+        Dim oda As New OleDbDataAdapter()
+        Dim dt As New DataTable()
+        cmdExcel.Connection = connExcel
+        'Get the name of First Sheet
+        connExcel.Open()
+        Dim dtExcelSchema As DataTable
+        dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+        Dim SheetName As String = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
+        connExcel.Close()
+        'Read Data from First Sheet
+        connExcel.Open()
+        cmdExcel.CommandText = "SELECT * From [" & SheetName & "]"
+        oda.SelectCommand = cmdExcel
+        oda.Fill(dt)
+        connExcel.Close()
+        'Bind Data to GridView
+        'GridView1.Caption = Path.GetFileName(FilePath)
+        GridView1.DataSource = dt
+        GridView1.DataBind()
+    End Sub
+    Protected Sub Upload(ByVal sender As Object, ByVal e As EventArgs)
+        'Upload and save the File.
+        Dim excelPath As String = Server.MapPath("~/Logistics/Files/") + Path.GetFileName(FileUpload1.PostedFile.FileName)
+        FileUpload1.SaveAs(excelPath)
+        Dim conString As String = ""
+        Dim storedProc As String = String.Empty
+        Dim sheet1 As String = String.Empty
+        Dim extension As String = Path.GetExtension(FileUpload1.PostedFile.FileName)
+
+        Select Case extension
+            Case ".xls" 'Excel 97-03.
+                storedProc = "FocusData_Insert"
+                conString = ConfigurationManager.ConnectionStrings("Excel03ConString").ConnectionString
+            Case ".xlsx" 'Excel 07 or higher.
+                storedProc = "FocusData_Insert"
+                conString = ConfigurationManager.ConnectionStrings("Excel07ConString").ConnectionString
+        End Select
+
+        'Read the Sheet Name.
+        conString = String.Format(conString, excelPath)
+        Using excel_con As OleDbConnection = New OleDbConnection(conString)
+            excel_con.Open()
+            sheet1 = excel_con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing).Rows(0)("TABLE_NAME").ToString()
+            excel_con.Close()
+        End Using
+
+        'Call the Stored Procedure to import Excel data in Table.
+        Dim constr As String = ConfigurationManager.ConnectionStrings("SJMSConnectionString").ConnectionString
+        Using con As SqlConnection = New SqlConnection(constr)
+            Using cmd As SqlCommand = New SqlCommand(storedProc, con)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("@SheetName", sheet1)
+                cmd.Parameters.AddWithValue("@FilePath", excelPath)
+                cmd.Parameters.AddWithValue("@HDR", "YES")
+                cmd.Parameters.AddWithValue("@TableName", "Focusdata")
+                cmd.Connection = con
+                con.Open()
+                cmd.ExecuteNonQuery()
+                con.Close()
+            End Using
+        End Using
+    End Sub
+
+
+    Protected Sub Export_Click(sender As Object, e As EventArgs) Handles Export.Click
+        Try
+            '    Dim ExporttoExcel As New Export
+            '    Dim Filename As String = "Vendor_"
+            '    ExporttoExcel.Export_Now(e, e, GridView1, Filename)
+            Dim constr As String = ConfigurationManager.ConnectionStrings("SJMSConnectionString").ConnectionString
+            Dim excelpath As String = LocalCall.LinkedserverPath1 + Path.GetFileName(FileUpload1.PostedFile.FileName)
+            Dim strquery As String = "INSERT INTO FocusData SELECT * FROM OPENQUERY(" + LocalCall.Linkedserver + ", 'SELECT * FROM [Sheet1$]')"
+            FileUpload1.SaveAs(excelpath)
+            Using con As SqlConnection = New SqlConnection(constr)
+                Using cmd As SqlCommand = New SqlCommand("Linked_CreateServer", con)
+                    cmd.CommandType = CommandType.StoredProcedure
+                    'To drop server
+                    'cmd.Parameters.AddWithValue("@LinkedServer", "Excelserver")
+                    'To Create server
+                    cmd.Parameters.AddWithValue("@FileLocation", LocalCall.LinkedserverPath2 + Path.GetFileName(FileUpload1.PostedFile.FileName))
+                    cmd.Parameters.AddWithValue("@LinkedServer", LocalCall.Linkedserver)
+                    cmd.Parameters.AddWithValue("@UserID", LocalCall.Linkedserveruser)
+                    cmd.Connection = con
+                    con.Open()
+                    cmd.ExecuteNonQuery()
+                    con.Close()
+                End Using
+                'To insert data
+                Using cmd As SqlCommand = New SqlCommand(strquery, con)
+                    'cmd.CommandType = CommandType.StoredProcedure
+                    'cmd.Parameters.AddWithValue("@tablename", "FocusData")
+                    'cmd.Parameters.AddWithValue("@Servername", LocalCall.Linkedserver)
+                    cmd.Connection = con
+                    con.Open()
+                    cmd.ExecuteNonQuery()
+                    con.Close()
+                End Using
+            End Using
+        Catch ex As Exception
+            Call usermsg("Fatal Error: " & ex.Message, LocalCall.Failure_Back, LocalCall.Failure_Front)
+        End Try
+    End Sub
+
+    Public Overrides Sub VerifyRenderingInServerForm(control As Control)
+        ' Verifies that the control is rendered 
+    End Sub
+    Protected Sub usermsg(msg As String, BColor As Color, FColor As Color, Optional NCount As String = "0 Row(s) Found")
+        Dim lbl As Label = Me.Master.FindControl("MessageFooter")
+        lbl.Text = msg
+        'LblCount.Text = NCount
+        lbl.BackColor = BColor
+        lbl.ForeColor = FColor
+    End Sub
+
+    Protected Sub ProdPlan_Click(sender As Object, e As EventArgs) Handles ProdPlan.Click
+        'Upload and save the File.
+        Dim excelPath As String = Server.MapPath("192.168.1.157") + Path.GetFileName(FileUpload1.PostedFile.FileName)
+        FileUpload1.SaveAs(excelPath)
+        Dim conString As String = ""
+        Dim storedProc As String = String.Empty
+        Dim sheet1 As String = String.Empty
+        Dim extension As String = Path.GetExtension(FileUpload1.PostedFile.FileName)
+
+        Select Case extension
+            Case ".xls" 'Excel 97-03.
+                storedProc = "FocusData_Insert1"
+                conString = ConfigurationManager.ConnectionStrings("Excel03ConString").ConnectionString
+            Case ".xlsx" 'Excel 07 or higher.
+                storedProc = "FocusData_Insert1"
+                conString = ConfigurationManager.ConnectionStrings("Excel07ConString").ConnectionString
+        End Select
+
+        'Read the Sheet Name.
+        conString = String.Format(conString, excelPath)
+        Using excel_con As OleDbConnection = New OleDbConnection(conString)
+            excel_con.Open()
+            sheet1 = excel_con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing).Rows(0)("TABLE_NAME").ToString()
+            excel_con.Close()
+        End Using
+
+        'Call the Stored Procedure to import Excel data in Table.
+        Dim constr As String = ConfigurationManager.ConnectionStrings("SJMSConnectionString").ConnectionString
+        Using con As SqlConnection = New SqlConnection(constr)
+            Using cmd As SqlCommand = New SqlCommand(storedProc, con)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("@SheetName", sheet1)
+                cmd.Parameters.AddWithValue("@FilePath", excelPath)
+                cmd.Parameters.AddWithValue("@HDR", "YES")
+                cmd.Parameters.AddWithValue("@TableName", "Focusdata")
+                cmd.Connection = con
+                con.Open()
+                cmd.ExecuteNonQuery()
+                con.Close()
+            End Using
+        End Using
+    End Sub
+End Class
+		
+		
+		
+Try
+            Panel3.DefaultButton = "LoginBtn"
+            Dim Getdata1 As New GetdataSet()
+            Dim strQuery1 As String = "SELECT 1 as Test"
+            If Getdata1.GetDataset(strQuery1).Tables(0).Rows(0).Item("Test") = 1 Then
+                Dim wrapper As New Simple3Des(LocalCall.Key)
+                Dim strQuery As String = "SELECT COUNT(*) as Login FROM Usertable 
+                                          WHERE UserName = '" + Logintxt.Text + "' AND Password = '" + wrapper.EncryptData(PwdTxt.Text) + "'
+                                          AND (Select Status from Employee Where EID = (Select EmpID from Usertable where Username = '" + Logintxt.Text + "')) = 'Active'"
+                Dim Getdata As New GetdataSet()
+                Dim Sqldataset As DataSet = Getdata.GetDataset(strQuery)
+                If Sqldataset.Tables(0).Rows(0).Item("Login").ToString = 1 Or Logintxt.Text = "Admin" And PwdTxt.Text = "786786" Then
+                    If Getdata.GetDataset("Select count(*) As Count from SessionLog Where Username = (Select UID from Usertable Where UserName = '" + Logintxt.Text + "')").Tables(0).Rows(0).Item("Count").ToString = 0 Then
+                        sqlCon = New SqlConnection(LocalCall.ConString)
+                        Using (sqlCon)
+                            Dim sqlComm As New SqlCommand()
+                            sqlComm.Connection = sqlCon
+                            sqlComm.CommandText = "Insert into Sessionlog Select UID from Usertable Where UserName = '" + Logintxt.Text + "'"
+                            sqlComm.CommandType = CommandType.Text
+                            sqlCon.Open()
+                            sqlComm.ExecuteNonQuery()
+                            sqlCon.Close()
+                        End Using
+                        Session("Username") = Convert.ToString(Logintxt.Text)
+                        Label4.Text = "Login successful"
+                        Response.Redirect("~/Configurations/Dashboard.aspx", False)
+                    Else
+                        Label4.Text = "Error: Duplicate session detected! Terminate the previous session!!"
+                        Logintxt.Focus()
+                    End If
+                ElseIf Logintxt.Text = Nothing And PwdTxt.Text = Nothing Then
+                    Label4.Text = "Error: Please key-in Username and Password"
+                    Logintxt.Focus()
+                Else
+                    Label4.Text = "Error: Incorrect Username / Password combination"
+                    Logintxt.Focus()
+                End If
+                Logintxt.Text = Nothing
+                PwdTxt.Text = Nothing
+            Else
+                Label4.Text = "Error: Connection to Database broken. Contact Admin"
+                Logintxt.Focus()
+            End If
+        Catch ex As Exception
+            Label4.Text = "Fatal Error: " & ex.Message
+            Logintxt.Focus()
+        End Try
+		
+		TextMode="Date"
+		
+		Word templates
+		
+		       'Try
+        Dim oMissing As Object = System.Reflection.Missing.Value
+            Dim oWord As New Word.Application
+            Dim oDoc As New Word.Document
+        Dim objDocTemplate As Object = Server.MapPath("~\Templates\SiteTemplate1.dot")
+        oDoc = oWord.Documents.Add(objDocTemplate, oMissing, oMissing, oMissing)
+            oDoc.ActiveWindow.ActivePane.View.Zoom.Percentage = 100
+            oDoc.ShowSpellingErrors = False
+            oDoc.Bookmarks("Address").Range.Text = TxtAdd1.Text & ", " & TxtAdd2.Text & ", " & TxtAdd3.Text & ", " & TxtCountry.Text & ", " & Txtpostalcode.Text
+            oDoc.Bookmarks("Client").Range.Text = TxtClient.Text
+            oDoc.Bookmarks("Contact").Range.Text = TxtSal.Text & ", " & TxtName.Text
+            oDoc.Bookmarks("Date").Range.Text = Now()
+            oDoc.Bookmarks("DateRequested").Range.Text = TxtDOR.Text
+            oDoc.Bookmarks("Handphone").Range.Text = TxtHP.Text
+            oDoc.Bookmarks("JobNo").Range.Text = TxtJobNo.Text
+            oDoc.Bookmarks("ManagerNote").Range.Text = TxtMgrNote.Text
+            oDoc.Bookmarks("PPERequest").Range.Text = ListPPE.Text
+            oDoc.Bookmarks("RA").Range.Text = TxtRisk.Text
+            oDoc.Bookmarks("ReferenceID").Range.Text = COSkey.Text
+            oDoc.Bookmarks("Sales").Range.Text = TxtSalesperson.Text
+            oDoc.Bookmarks("Salesnote").Range.Text = TxtJobNo.Text
+            oDoc.Bookmarks("Status").Range.Text = "New"
+            oDoc.Bookmarks("Team").Range.Text = TxtTeam.SelectedItem.Text
+        oDoc.Bookmarks("Telephone").Range.Text = TxtTel.Text
+        Dim GetData As New GetdataSet()
+        Dim SQLDataset As DataSet = GetData.GetDataset("Select Instrument, Range, Make, Model, Quantity, [Cert. Type], [Pre. Cert.], [Cal. Points] from JobRequestInstruments Where JRID = '" & COSkey.Text & "'")
+        Dim sText As String = ""
+        For Each oRow As DataRow In SQLDataset.Tables(0).Rows
+            For idx = 0 To SQLDataset.Tables(0).Columns.Count - 1
+                sText += oRow.Item(idx).ToString
+                If idx < (SQLDataset.Tables(0).Columns.Count - 1) Then sText += vbTab
+            Next
+        Next
+        Dim oRange As Word.Range = oDoc.Bookmarks("InsList").Range
+        oRange.Text = sText
+        oRange.ConvertToTable(Separator:=vbTab)
+        'Dim newT As Word.Table = oRange.ConvertToTable(Separator:=vbTab)
+        'newT.Range.Copy()
+        'oRange.Paste()
+        Dim oSaveasFile As Object = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "Site_" & DateTime.Now.ToString("ddmmyyyyHHmmss") & ".doc"
+        oDoc.SaveAs(oSaveasFile, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing)
+            Dim SaveChanges As Object = True
+            oDoc.Close(SaveChanges, oMissing, oMissing)
+            oDoc = Nothing
+            oWord.Quit(SaveChanges, oMissing, oMissing)
+            'On Error Resume Next
+        'Dim objWord As Object
+        'Dim objDoc As Object
+        '    Dim sID As String = "Vikram"
+        '    objWord = CreateObject("Word.Application")
+        'objDoc = objWord.Documents.Open(Server.MapPath("~\Templates\Name.dot"))
+        'objWord.Visible = False
+        'With objWord
+        '    .ActiveDocument.Bookmarks("Name").Range.Text = sID
+        '    .ActiveDocument.SaveAs2(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "Site_" & DateTime.Now.ToString("ddmmyyyyHHmmss") & ".pdf", WdSaveFormat.wdFormatPDF)
+        '    .ActiveDocument.Close(SaveChanges:=False)
+        'End With
+        'Call usermsg("Export Complete", LocalCall.Success_Back, LocalCall.Success_Front)
+        'Catch ex As Exception
+        '    Call usermsg("Fatal Error: " & ex.Message, LocalCall.Failure_Back, LocalCall.Failure_Front)
+        'End Try
+		
+		

@@ -1,0 +1,578 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>
+    </SchemaVersion>
+    <ProjectGuid>{38B3A4D1-7A59-4B0B-827D-33BCAEA472CD}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PriceCalc</RootNamespace>
+    <AssemblyName>PriceCalc</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44388</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>PriceCalc.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>PriceCalc.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\itextsharp.xmlworker.5.5.13.1\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configurations\AccessControl.aspx" />
+    <Content Include="Configurations\Changepassword.aspx" />
+    <Content Include="Configurations\Client.aspx" />
+    <Content Include="Configurations\Dashboard.aspx" />
+    <Content Include="Configurations\Department.aspx" />
+    <Content Include="Configurations\Role.aspx" />
+    <Content Include="Configurations\Transporters.aspx" />
+    <Content Include="Images\add.png" />
+    <Content Include="Configurations\Employee.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\application.png" />
+    <Content Include="Images\home.png" />
+    <Content Include="Images\Login BG.gif" />
+    <Content Include="Images\Not Okay.png" />
+    <Content Include="Images\Okay.png" />
+    <Content Include="Images\Remove.png" />
+    <Content Include="LoginWindow.aspx" />
+    <Content Include="Logistics\Certification.aspx" />
+    <Content Include="Logistics\Collection.aspx" />
+    <Content Include="Logistics\deliveryplan.aspx" />
+    <Content Include="Logistics\deliveryschedule.aspx" />
+    <Content Include="Logistics\Importproduction.aspx" />
+    <Content Include="Logistics\Jobstatus.aspx" />
+    <Content Include="Logistics\productionassigned.aspx" />
+    <Content Include="Logistics\productionplan.aspx" />
+    <Content Include="Logistics\worksheetstatus.aspx" />
+    <Content Include="Reports\agentupdates.aspx" />
+    <Content Include="Reports\packinglist.aspx" />
+    <Content Include="Reports\taschedule.aspx" />
+    <Content Include="Reports\transportstatusupdate.aspx" />
+    <Content Include="Scripts\jquery-ui.css" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.css" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui.structure.css" />
+    <Content Include="Scripts\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\jquery-ui.theme.css" />
+    <Content Include="Scripts\jquery-ui.theme.min.css" />
+    <Content Include="Configurations\User.aspx" />
+    <Content Include="Sitejob\sitejobmgmt.aspx" />
+    <Content Include="Sitejob\sitejobrequest.aspx" />
+    <Content Include="Sitejob\sitejobstatus.aspx" />
+    <Content Include="Sitejob\sitejobsummary.aspx" />
+    <Content Include="SOP\Quality Manual.aspx" />
+    <Content Include="SQL Script\12122019.sql" />
+    <Content Include="SQL Script\dbo.Procedure.sql" />
+    <Content Include="SQL Script\Script SJMS.sql" />
+    <Content Include="SQL Script\Script SJMS_17122019.sql" />
+    <Content Include="SQL Script\Script SJMS_24122019.sql" />
+    <Content Include="SQL Script\Script SJMS_27122019.sql" />
+    <Content Include="SQL Script\SQLQuery1.sql" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\Export.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Classes\GlobalVar.vb" />
+    <Compile Include="Configurations\AccessControl.aspx.designer.vb">
+      <DependentUpon>AccessControl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\AccessControl.aspx.vb">
+      <DependentUpon>AccessControl.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Changepassword.aspx.designer.vb">
+      <DependentUpon>Changepassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Changepassword.aspx.vb">
+      <DependentUpon>Changepassword.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Client.aspx.designer.vb">
+      <DependentUpon>Client.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Client.aspx.vb">
+      <DependentUpon>Client.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Dashboard.aspx.designer.vb">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Dashboard.aspx.vb">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Department.aspx.designer.vb">
+      <DependentUpon>Department.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Department.aspx.vb">
+      <DependentUpon>Department.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Employee.aspx.designer.vb">
+      <DependentUpon>Employee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Employee.aspx.vb">
+      <DependentUpon>Employee.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Classes\EncryptDecrypt.vb" />
+    <Compile Include="Classes\GetdataSet.vb" />
+    <Compile Include="Classes\Exceptions.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Role.aspx.designer.vb">
+      <DependentUpon>Role.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Role.aspx.vb">
+      <DependentUpon>Role.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Configurations\Transporters.aspx.designer.vb">
+      <DependentUpon>Transporters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\Transporters.aspx.vb">
+      <DependentUpon>Transporters.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.vb">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="LoginWindow.aspx.designer.vb">
+      <DependentUpon>LoginWindow.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LoginWindow.aspx.vb">
+      <DependentUpon>LoginWindow.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Classes\Logout.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\Certification.aspx.designer.vb">
+      <DependentUpon>Certification.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\Certification.aspx.vb">
+      <DependentUpon>Certification.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\Collection.aspx.designer.vb">
+      <DependentUpon>Collection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\Collection.aspx.vb">
+      <DependentUpon>Collection.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\deliveryplan.aspx.designer.vb">
+      <DependentUpon>deliveryplan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\deliveryplan.aspx.vb">
+      <DependentUpon>deliveryplan.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\deliveryschedule.aspx.designer.vb">
+      <DependentUpon>deliveryschedule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\deliveryschedule.aspx.vb">
+      <DependentUpon>deliveryschedule.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\Importproduction.aspx.designer.vb">
+      <DependentUpon>Importproduction.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\Importproduction.aspx.vb">
+      <DependentUpon>Importproduction.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\Jobstatus.aspx.designer.vb">
+      <DependentUpon>Jobstatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\Jobstatus.aspx.vb">
+      <DependentUpon>Jobstatus.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\productionassigned.aspx.designer.vb">
+      <DependentUpon>productionassigned.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\productionassigned.aspx.vb">
+      <DependentUpon>productionassigned.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\productionplan.aspx.designer.vb">
+      <DependentUpon>productionplan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\productionplan.aspx.vb">
+      <DependentUpon>productionplan.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Logistics\worksheetstatus.aspx.designer.vb">
+      <DependentUpon>worksheetstatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logistics\worksheetstatus.aspx.vb">
+      <DependentUpon>worksheetstatus.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="MainMasterPage.Master.designer.vb">
+      <DependentUpon>MainMasterPage.Master</DependentUpon>
+    </Compile>
+    <Compile Include="MainMasterPage.Master.vb">
+      <DependentUpon>MainMasterPage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\MyExtensions\MyWebExtension.vb">
+      <VBMyExtensionTemplateID>Microsoft.VisualBasic.Web.MyExtension</VBMyExtensionTemplateID>
+      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Configurations\User.aspx.designer.vb">
+      <DependentUpon>User.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configurations\User.aspx.vb">
+      <DependentUpon>User.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Reports\agentupdates.aspx.designer.vb">
+      <DependentUpon>agentupdates.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\agentupdates.aspx.vb">
+      <DependentUpon>agentupdates.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Reports\packinglist.aspx.designer.vb">
+      <DependentUpon>packinglist.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\packinglist.aspx.vb">
+      <DependentUpon>packinglist.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Reports\taschedule.aspx.designer.vb">
+      <DependentUpon>taschedule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\taschedule.aspx.vb">
+      <DependentUpon>taschedule.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Reports\transportstatusupdate.aspx.designer.vb">
+      <DependentUpon>transportstatusupdate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\transportstatusupdate.aspx.vb">
+      <DependentUpon>transportstatusupdate.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Sitejob\sitejobmgmt.aspx.designer.vb">
+      <DependentUpon>sitejobmgmt.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Sitejob\sitejobmgmt.aspx.vb">
+      <DependentUpon>sitejobmgmt.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Sitejob\sitejobrequest.aspx.designer.vb">
+      <DependentUpon>sitejobrequest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Sitejob\sitejobrequest.aspx.vb">
+      <DependentUpon>sitejobrequest.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Sitejob\sitejobstatus.aspx.designer.vb">
+      <DependentUpon>sitejobstatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Sitejob\sitejobstatus.aspx.vb">
+      <DependentUpon>sitejobstatus.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Sitejob\sitejobsummary.aspx.designer.vb">
+      <DependentUpon>sitejobsummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Sitejob\sitejobsummary.aspx.vb">
+      <DependentUpon>sitejobsummary.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="SOP\Quality Manual.aspx.designer.vb">
+      <DependentUpon>Quality Manual.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SOP\Quality Manual.aspx.vb">
+      <DependentUpon>Quality Manual.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MainMasterPage.Master" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="My Project\PublishProfiles\Live Profile.pubxml" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Content Include="Outputs\Site_17452020094514.pdf" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\package.json" />
+    <Content Include="Vikram Ayyadurai.pfx" />
+    <Content Include="SOP\Quality Manual.pdf" />
+    <Content Include="SOP\Caltek`s Quality Policy and Quality Objectives.pdf" />
+    <Content Include="SOP\Customer complaint handling process.pdf" />
+    <Content Include="SOP\High Level Process Map.pdf" />
+    <Content Include="SOP\ILAC_G8_03_2009 Guidelines on the reporting of compliance with specification.pdf" />
+    <Content Include="SOP\Procedure for Change Management.pdf" />
+    <Content Include="SOP\Procedure for Competency and Training.pdf" />
+    <Content Include="SOP\Procedure for Control of Documents.pdf" />
+    <Content Include="SOP\Procedure for Control of monitoring and measuring equipment.pdf" />
+    <Content Include="SOP\Procedure for Control of Records.pdf" />
+    <Content Include="SOP\Procedure for Customer Satisfaction and Data Analysis.pdf" />
+    <Content Include="SOP\Procedure for Identification and Traceability.pdf" />
+    <Content Include="SOP\Procedure for Internal Audit.pdf" />
+    <Content Include="SOP\Procedure for managing confidentiality and impartiality.pdf" />
+    <Content Include="SOP\Procedure for managing Data logger Systems.pdf" />
+    <Content Include="SOP\Procedure for managing information systems.pdf" />
+    <Content Include="SOP\Procedure for nonconforming work and CAPA.pdf" />
+    <Content Include="SOP\Procedure for Production and Service provision.pdf" />
+    <Content Include="SOP\Procedure for Purchase and Subcontract.pdf" />
+    <Content Include="SOP\Procedure for selection, verification and validation of calibration methods.pdf" />
+    <Content Include="SOP\Procedure for Service Realization.pdf" />
+    <Content Include="SOP\Rotronic Logger - Quick Reference.pdf" />
+    <Content Include="SOP\Specimen Signatures.pdf" />
+    <Content Include="SOP\Terms and Definitions.pdf" />
+    <Content Include="SOP\Procedure for Risk Assessment and Contingency Measures.docx" />
+    <Content Include="SOP\Caltek Employee Handbook 01-2019.pdf" />
+    <Content Include="Templates\Doc1.dotx" />
+    <Content Include="Templates\Name.dot" />
+    <Content Include="Templates\SiteTemplate.dot" />
+    <Content Include="Templates\SiteTemplate4.dotx" />
+    <Content Include="Templates\SiteTemplate4.dot" />
+    <Content Include="Templates\SiteTemplate3.dot" />
+    <Content Include="Templates\SiteTemplate2.dot" />
+    <Content Include="Templates\SiteTemplate1.dot" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="css\" />
+    <Folder Include="js\" />
+    <Folder Include="Logistics\Files\" />
+    <Folder Include="packages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Vikram Ayyadurai.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>PriceCalc.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>PriceCalc.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51416</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44388/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

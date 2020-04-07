@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields xmlns:xfdf="http://ns.adobe.com/xfdf-transition/"><RepeatStatus>Fail</RepeatStatus></fields>
+
+
+ <asp:Content ID="Content1" ContentPlaceHolderID="CPH3" runat="server">
+        <asp:Panel ID="Panel3" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 8%;position: absolute;height: 36%;width: 98%;overflow: scroll;">    
+        <asp:Label ID="lblEmployee" runat="server" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 1%; top: 10%; position: absolute; height: 15%; width: 5%; vertical-align:inherit; text-align: right" Text="Employeee" ForeColor="Black"></asp:Label>
+        <asp:DropDownList runat="server" style="z-index: 1; left: 7%; top: 5%; position: absolute; width: 16%; height: 10%; bottom: 196px;" ID="TxtEmployee"></asp:DropDownList>
+        <asp:Label ID="lblUsername" runat="server" ForeColor="Black" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 24%; top: 10%; position: absolute; height: 15%; width: 5%; vertical-align:inherit; text-align: right" Text="Username"></asp:Label>
+        <asp:TextBox ID="UnameText" runat="server" style="z-index: 1; left: 30%; top: 5%; position: absolute; width: 16%; height: 9%"></asp:TextBox>
+        <asp:Label ID="lblPassword" runat="server" ForeColor="Black" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 47%; top: 10%; position: absolute; height: 15%; width: 5%; vertical-align:inherit; text-align: right" Text="Password"></asp:Label>
+        <asp:TextBox ID="PwdText" runat="server" style="z-index: 1; left: 53%; top: 5%; position: absolute; width: 16%; height: 9%" TextMode="Password"></asp:TextBox>
+        <asp:Label ID="lblRePassword" runat="server" ForeColor="Black" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 70%; top: 10%; position: absolute; height: 15%; width: 5%; vertical-align:inherit; text-align: right" Text="Re-password"></asp:Label>
+        <asp:TextBox ID="RPwdText" runat="server" style="z-index: 1; left: 76%; top: 5%; position: absolute; width: 16%; height: 9%" TextMode="Password"></asp:TextBox>
+        <asp:Label ID="lblRole" runat="server"  ForeColor="Black" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 1%; top: 25%; position: absolute; height: 15%; width: 5%; vertical-align:inherit; text-align: right" Text="Role"></asp:Label>
+        <asp:DropDownList ID="TxtRole" runat="server" style=" z-index: 1; left: 7%; top: 20%; position: absolute; width: 16%; height: 10%"></asp:DropDownList>
+        </asp:Panel>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="CPH1" runat="server">
+        <asp:Panel ID="Panel4" runat="server" style="border-style: groove; border-color: inherit; border-width: medium; z-index: 1; left: 10px; top: 45%; position: absolute; height: 10%; width: 98%;">
+        <asp:Button ID="Clear" runat="server" style="z-index: 1; left: 17%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Clear" />
+        <asp:Button ID="Save" runat="server" style="z-index: 1; left: 1%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Save" />
+        <asp:Button ID="Update" runat="server" style="z-index: 1; left: 9%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Update" />
+        <asp:Button ID="Delete" runat="server" style="z-index: 1; left: 25%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Delete" />
+        <asp:Label ID="COSkey" runat="server" style="z-index: 1; right: 1%; top: 30%; position: absolute; height: 40%; width: 7%;"></asp:Label>
+        </asp:Panel>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="CPH2" runat="server">
+        <asp:Panel ID="Panel5" runat="server" BorderStyle="None" style="z-index: 1; left: 10px; top: 56%; position: absolute; height: 5%; width: 98%">
+        <asp:TextBox ID="Searchbox" runat="server" style="z-index: 1; left: 5%; top: 3px; position: absolute; width: 24%; height: 89%; background-color: #E9E9E9;" BackColor="#FCF5D8" BorderStyle="Solid"></asp:TextBox>
+        <asp:Label ID="Label11" runat="server" Font-Names="Arial" Font-Size="Small" style="z-index: 1; left: 0%; top: 45%; position: absolute; width: 4%; text-align: Left; vertical-align: inherit; right: 1167px;" Text="Search: "></asp:Label>
+        <asp:Button ID="SearchButton" runat="server" style="z-index: 1; left: 32%; top: 10%; height:80%; width: 7%; position: absolute" Text="Find" />
+        </asp:Panel>
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="CPH4" runat="server">
+        <asp:Panel ID="Panel6" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 62%; position: absolute;height: 31%; width: 98%;background-color: #FFFFFF; overflow:scroll">
+        <asp:GridView ID="GridView1" runat="server" BorderStyle="Solid" Font-Names="Arial" Font-Size="Small" style="border-style: groove; border-color: inherit; border-width: thin; z-index: -1; left: 12px; width: 100%;top: 5%;" CellPadding="5" ShowHeaderWhenEmpty="True" ForeColor="Black">
+        <Columns>
+        <asp:ButtonField HeaderText="Edit" Text="Edit">
+        <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+        </asp:ButtonField>
+        </Columns>
+        <HeaderStyle BackColor="#FF9900"/>
+        </asp:GridView>
+        </asp:Panel>
+</asp:Content>
+
+
+	        <asp:ListBox ID="Added" runat="server" style="z-index: 1; left: 57%; top: 10%; position: absolute; height: 85%; width: 20%" Font-Names="Arial" Font-Size="Medium" SelectionMode="Multiple"></asp:ListBox>
+			
+			<asp:ListBox ID="Screens" runat="server" style="z-index: 1; left: 30%; top: 10%; position: absolute; height: 85%; width: 20%" Font-Names="Arial" Font-Size="Medium" SelectionMode="Multiple"></asp:ListBox>
+			
+			<asp:GridView ID="Screens" runat="server" BorderStyle="Solid" Font-Names="Arial" Font-Size="Small" style="border-style: groove; border-color: inherit; border-width: thin; z-index: 1; left: 30%; top: 10%; position: absolute; height: 85%; width: 20%" CellPadding="5" ShowHeaderWhenEmpty="True" ForeColor="Black">
+        <HeaderStyle BackColor="#FF9900"/>
+        </asp:GridView>
+		
+		<columns>
+        <asp:templatefield HeaderText="Select">
+            <itemtemplate>
+                <asp:checkbox ID="cbSelect"
+                CssClass="gridCB" runat="server"></asp:checkbox>
+            </itemtemplate>
+        </asp:templatefield>
+		</columns>
+		
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="CPH3" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="CPH1" runat="server">
+    <%--    <script>
+<connectionStrings>
+ <add name ="Excel03ConString" connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'"/>
+ <add name ="Excel07ConString" connectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0;HDR={1}'"/>
+</connectionStrings >
+</script>--%>
+
+<asp:Panel ID="Panel4" runat="server" style="border-style: groove; border-color: inherit; border-width: medium; z-index: 1; left: 10px; top: 45%; position: absolute; height: 10%; width: 98%;">
+<asp:FileUpload ID="FileUpload1" runat="server" style="position: absolute; top: 33%; left: 1%; height: 40%; width:21%;"/>
+<%--<asp:Button ID="Clear" runat="server" style="z-index: 1; left: 17%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Clear" />
+<asp:Button ID="Browse" runat="server" style="z-index: 1; left: 1%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Browse" />--%>
+<asp:Button ID="Process" runat="server" style="z-index: 1; left: 23%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Process" />
+<%--<asp:Button ID="Delete" runat="server" style="z-index: 1; left: 25%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Delete" />--%>
+<asp:Button ID="Export" runat="server" style="z-index: 1; left: 31%; top: 30%; position: absolute; height: 40%; width: 7%;" Text="Export" />
+<%--<asp:Label ID="COSkey" runat="server" style="z-index: 1; right: 1%; top: 30%; position: absolute; height: 40%; width: 7%;" ForeColor="#87CEEC"></asp:Label>--%>
+<%--            <asp:FileUpload ID="FileUpload1" runat="server" />
+<%--            <asp:Button ID="btnUpload" runat="server" Text="Upload" OnClick="btnUpload_Click" />--%>
+<%--            <br />
+            <asp:Label ID="Label1" runat="server" Text="Has Header ?"></asp:Label><br />
+            <asp:RadioButtonList ID="rbHDR" runat="server" RepeatLayout = "Flow">
+            <asp:ListItem Text="Yes" Value="Yes" Selected="True"></asp:ListItem>
+            <asp:ListItem Text="No" Value="No"></asp:ListItem>
+            </asp:RadioButtonList>--%>
+        </asp:Panel>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="CPH2" runat="server">
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="CPH4" runat="server">
+    <asp:Panel ID="Panel6" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 62%; position: absolute;height: 31%; width: 98%;background-color: #FFFFFF; overflow:scroll">
+        <asp:GridView ID="GridView1" runat="server" BorderStyle="Solid" Font-Names="Arial" Font-Size="Small" style="border-style: groove; border-color: inherit; border-width: thin; z-index: -1; left: 12px; width: 100%;top: 5%;" CellPadding="5" ShowHeaderWhenEmpty="True" ForeColor="Black">
+         <Columns>
+                        <asp:templatefield HeaderText="Select">
+                        <itemtemplate>
+                        <asp:checkbox ID="cbSelect" CssClass="gridCB" runat="server"></asp:checkbox>
+                        </itemtemplate>
+                        <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </asp:templatefield>
+        </Columns>
+        <HeaderStyle BackColor="#FF9900"/>
+        </asp:GridView>
+<%--        <asp:GridView ID="GridView1" runat="server" OnPageIndexChanging="PageIndexChanging" AllowPaging="true">
+        </asp:GridView>--%>
+    </asp:Panel>
+</asp:Content>
+
+
+
+<%--            <asp:FileUpload ID="FileUpload1" runat="server" />
+<%--            <asp:Button ID="btnUpload" runat="server" Text="Upload" OnClick="btnUpload_Click" />--%>
+<%--            <br />
+            <asp:Label ID="Label1" runat="server" Text="Has Header ?"></asp:Label><br />
+            <asp:RadioButtonList ID="rbHDR" runat="server" RepeatLayout = "Flow">
+            <asp:ListItem Text="Yes" Value="Yes" Selected="True"></asp:ListItem>
+            <asp:ListItem Text="No" Value="No"></asp:ListItem>
+            </asp:RadioButtonList>--%>
+
+
+
+<asp:TemplateField HeaderText="Model">
+<ItemTemplate>
+<asp:TextBox ID="TxtModel" runat="server"></asp:TextBox>
+</ItemTemplate>
+<asp:TemplateField HeaderText="Quantity">
+<ItemTemplate>
+<asp:TextBox ID="TxtQty" runat="server"></asp:TextBox>
+</ItemTemplate>
+<asp:TemplateField HeaderText="Cert Type.">
+<ItemTemplate>
+<asp:DropDownList ID="TxtCert" runat="server"></asp:DropDownList>
+</ItemTemplate>
+<asp:TemplateField HeaderText="Pre. Cert.">
+<ItemTemplate>
+<asp:TextBox ID="TxtCert" runat="server"></asp:TextBox>
+</ItemTemplate>
+<asp:TemplateField HeaderText="Cal. Pts.">
+<ItemTemplate>
+<asp:TextBox ID="TxtCalpts" runat="server"></asp:TextBox>
+</ItemTemplate>
+
+Fatal Error: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_JRID". The conflict occurred in database "SJMS", table "dbo.JobRequest", column 'Id'. The statement has been terminated.
+
+ForeColor="#87CEEC"
+
+
+    <add name="SJMSConnectionString" connectionString="Data Source=192.168.1.157;Initial Catalog=SJMS;Persist Security Info=True;User ID=sa;Password=Sap+0514"
+      providerName="System.Data.SqlClient" />

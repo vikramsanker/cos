@@ -1,0 +1,161 @@
+﻿<%@ Master Language="VB" AutoEventWireup="false" CodeBehind="MainMasterPage.Master.vb" Inherits="PriceCalc.MasterPage" %>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <script type="text/javascript">
+        if (document.layers) {
+            //Capture the MouseDown event.
+            document.captureEvents(Event.MOUSEDOWN);
+
+            //Disable the OnMouseDown event handler.
+            document.onmousedown = function () {
+                return false;
+            };
+        }
+        else {
+            //Disable the OnMouseUp event handler.
+            document.onmouseup = function (e) {
+                if (e != null && e.type == "mouseup") {
+                    //Check the Mouse Button which is clicked.
+                    if (e.which == 2 || e.which == 3) {
+                        //If the Button is middle or right then disable.
+                        return false;
+                    }
+                }
+            };
+        }
+
+        //Disable the Context Menu event.
+        document.oncontextmenu = function () {
+            return false;
+        };
+    </script>
+<title>Caltek Operating System</title>
+<style>
+        body, html {background: #87CEEC;}
+            #form1 {height: 100%; width: 98%; margin-left: 0; top: 0; left: 0; right: 0; margin-bottom: 19px; background: #87CEEC; z-index: 1}
+            body {font-family: Arial; Font-Size: 0.7vw; color:  #f2f3f4; height:3.5%; width:99%; z-index: 2; margin-bottom: 9px;}
+            .ParentMenu, .ParentMenu:hover {width: 5vw; background-color: #fff; color: #333; text-align: center; Font-Size: 0.7vw; height: 3vh; line-height: 30px; margin-right: 5px;}  
+            .ParentMenu:hover {background-color: Highlight; color: white }
+            .ChildMenu, .ChildMenu:hover {width: 8vw; background-color: #fff; color: #333; text-align: Left; Font-Size: 0.7vw; height: 3vh; line-height: 30px; margin-top: 5px; text-indent: 10px;}  
+            .ChildMenu:hover {background-color: Highlight; color: white}  
+            .selected, .selected:hover {background-color: #A6A6A6 !important; color: Highlight;}  
+            .level2 {background-color: #fff;}  
+</style> 
+<style>
+            input[type=date]::-webkit-inner-spin-button 
+            {
+            -webkit-appearance: none;
+            display: none;
+            }
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<asp:ScriptManager ID="Timerscript" runat="server"></asp:ScriptManager>
+<asp:Panel ID="Panel0" runat="server" style="border-style: groove; border-color: inherit; border-width: medium; z-index: 1; left: 0; top: 0; position: absolute; height: 97%; width: 98%; right: 0; bottom: 0; margin-bottom: auto; margin-left: auto; margin-right: auto; margin-top: auto ">
+<asp:Panel ID="Panel8" runat="server" style="border-style: groove; z-index: 4; position: absolute; height: 5%; width: 23%; overflow: visible; top: 1%; left: 10px;">
+    <asp:Label ID="LblHeader" runat="server" Font-Bold="True" Font-Names="Arial Black" ForeColor="Black" style=" z-index: 1; Font-Size: 0.7vw; Left: 3%;top: 20%; position: absolute; height: 70%; width: 90%; text-align: center; vertical-align: sub;"></asp:Label>
+</asp:Panel>
+<asp:Panel ID="Panel1" runat="server" style="border-style: groove; z-index: 4; position: absolute; height: 5%; width: 56%; overflow: visible; top: 1%; left: 25%;">
+    <div>  
+        <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" style="position: absolute; height: 100%; width: 95%; overflow: visible; top: 20%; left: 1%; Font-Size: 0.7vw;" Width="1px">  
+            <DynamicItemTemplate>
+            <%# Eval("Text") %>
+            </DynamicItemTemplate>
+        <Items>
+            <asp:MenuItem NavigateUrl="~/Configurations/Dashboard.aspx" Text="Home" Value="Home"></asp:MenuItem>
+            <asp:MenuItem Text="Configuration" Value="Configuration" Selectable="False">
+            <asp:MenuItem NavigateUrl="~/Configurations/Role.aspx" Text="Role" Value="Role"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Configurations/Department.aspx" Text="Department" Value="Department"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Configurations/Employee.aspx" Text="Employee" Value="Employee"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Configurations/User.aspx" Text="User" Value="User"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Configurations/Client.aspx" Text="Client" Value="Client"></asp:MenuItem>
+            <asp:MenuItem Text="Transport Agency" Value="Transport Agency" NavigateUrl="~/Configurations/Transporters.aspx"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Configurations/AccessControl.aspx" Text="Access Control" Value="Access Control"></asp:MenuItem>
+            <asp:MenuItem Text="Change Password" Value="Change Password" NavigateUrl="~/Configurations/Changepassword.aspx"></asp:MenuItem>
+            </asp:MenuItem>
+            <asp:MenuItem Text="Production Mgmt." Value="Production Mgmt." Selectable="False">
+            <asp:MenuItem NavigateUrl="~/Logistics/Importproduction.aspx" Text="Import Raw Data" Value="Import Raw Data"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Logistics/productionplan.aspx" Text="Production Plan" Value="Production Plan"></asp:MenuItem>
+            <asp:MenuItem Text="My Assigned Work" Value="My Assigned Work" NavigateUrl="~/Logistics/productionassigned.aspx"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Logistics/worksheetstatus.aspx" Text="Datasheet Status" Value="Datasheet Status"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Logistics/Certification.aspx" Text="Certificate Status" Value="Certificate Status"></asp:MenuItem>
+            <asp:MenuItem Text="Delivery Plan" Value="Delivery Plan" NavigateUrl="~/Logistics/deliveryplan.aspx"></asp:MenuItem>
+            </asp:MenuItem>
+            <asp:MenuItem Text="Site Job Mgmt." Value="Site Job Mgmt." Selectable="False">
+            <asp:MenuItem Text="Request Job" Value="Request Job" NavigateUrl="~/Sitejob/sitejobrequest.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="Assignment" Value="Assignment" NavigateUrl="~/Sitejob/sitejobmgmt.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="Site Job Schedule" Value="Site Job Schedule" NavigateUrl="~/Sitejob/sitejobsummary.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="My Site Work" Value="My Site Work" NavigateUrl="~/Sitejob/sitejobstatus.aspx"></asp:MenuItem>
+            </asp:MenuItem>
+            <asp:MenuItem Text="Logistics" Value="Logistics" Selectable="False">
+            <asp:MenuItem NavigateUrl="~/Logistics/deliveryschedule.aspx" Text="Delivery Schedule" Value="Delivery Schedule"></asp:MenuItem>
+            <asp:MenuItem Text="TA Schedule" Value="TA Schedule" NavigateUrl="~/Reports/taschedule.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="Packing List" Value="Packing List" NavigateUrl="~/Reports/packinglist.aspx"></asp:MenuItem>
+            <asp:MenuItem Text="Job Status" Value="Job Status" NavigateUrl="~/Logistics/Jobstatus.aspx"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Reports/agentupdates.aspx" Text="Overide Delivery Status" Value="Delivery Status"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Reports/transportstatusupdate.aspx" Text="Driver Updates" Value="Driver Updates"></asp:MenuItem>
+            <asp:MenuItem NavigateUrl="~/Logistics/Collection.aspx" Text="Collection" Value="Collection"></asp:MenuItem>
+            </asp:MenuItem>
+            <asp:MenuItem Text="Quality Mgmt." Value="Quality Mgmt." NavigateUrl="~/SOP/Quality Manual.aspx">
+            </asp:MenuItem>
+            <asp:MenuItem Text="Master Mgmt." Value="Master Mgmt." Selectable="False">
+            <asp:MenuItem Text="Summary" Value="Summary"></asp:MenuItem>
+            <asp:MenuItem Text="Calibration Mgmt" Value="Calibration Mgmt"></asp:MenuItem>
+            <asp:MenuItem Text="Maintenance" Value="Maintenance"></asp:MenuItem>
+            <asp:MenuItem Text="Verification" Value="Verification"></asp:MenuItem>
+            <asp:MenuItem Text="Non-Conformance" Value="Non-Conformance"></asp:MenuItem>
+            </asp:MenuItem>
+            <asp:MenuItem Text="Internal Audit" Value="Internal Audit" Selectable="False">
+            <asp:MenuItem Text="Audit Plan" Value="Audit Plan"></asp:MenuItem>
+            <asp:MenuItem Text="Audit Checklist" Value="Audit Checklist"></asp:MenuItem>
+            <asp:MenuItem Text="NCR" Value="NCR"></asp:MenuItem>
+            <asp:MenuItem Text="RCA and Action" Value="RCA and Action"></asp:MenuItem>
+            </asp:MenuItem>
+        </Items>
+            <LevelMenuItemStyles>  
+            <asp:MenuItemStyle CssClass="ParentMenu" />  
+            <asp:MenuItemStyle CssClass="ChildMenu" />  
+            <asp:MenuItemStyle CssClass="ChildMenu" />  
+            </LevelMenuItemStyles>  
+            <StaticSelectedStyle CssClass="selected" />  
+    </asp:Menu>  
+        </div> 
+</asp:Panel>
+<asp:Panel ID="Panel2" runat="server" style="border-style: groove; z-index: 4; position: absolute; height: 5%; width: 16%; overflow: visible; top: 1%; left: 82%;">
+    <asp:Label ID="UserID" runat="server" Font-Bold="True" Font-Names="Arial" ForeColor="Black" style=" z-index: 1; Font-Size: 0.7vw; right: 38%;top: 29%; position: absolute;height: 30%; width: 54%; text-align: right;"></asp:Label>
+    <asp:Button ID="Button1" runat="server" style="right: 5%; top: 19%; height: 47%; position: absolute; Font-Size: 0.7vw; width: 30%; " Text="Logout" />
+</asp:Panel>
+<asp:Contentplaceholder ID="CPH3" runat="server">
+<asp:Panel ID="Panel3" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 8%;position: absolute;height: 36%;width: 98%;overflow: scroll;">
+</asp:Panel>
+</asp:Contentplaceholder>
+<asp:Contentplaceholder ID="CPH1" runat="server">
+<asp:Panel ID="Panel4" runat="server" style="border-style: groove; border-color: inherit; border-width: medium; z-index: 1; left: 10px; top: 45%; position: absolute; height: 10%; width: 98%;">
+</asp:Panel>
+</asp:Contentplaceholder>
+<asp:Contentplaceholder ID="CPH2" runat="server">
+<asp:Panel ID="Panel5" runat="server" BorderStyle="None" style="z-index: 1; left: 10px; top: 56%; position: absolute; height: 5%; width: 98%">
+</asp:Panel>
+</asp:Contentplaceholder>
+<asp:Contentplaceholder ID="CPH4" runat="server">
+<asp:Panel ID="Panel6" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 62%; position: absolute;height: 31%; width: 98%;background-color: #FFFFFF; overflow:scroll">
+</asp:Panel>
+</asp:Contentplaceholder>
+<asp:Panel ID="Panel7" runat="server" style="border-style: groove;border-color: inherit;border-width: medium;z-index: 1;left: 10px;top: 94%; position: absolute;height: 5%; width: 98%;background-color: #FFFFFF;">
+    <asp:Label ID="MessageFooter" runat="server" style="z-index: 1; left: 2px; top: 10%; position: absolute; height: 80%; width: 66%; text-align: left; vertical-align: sub; azimuth: center;" Text="MessageFooter" ForeColor="Maroon"></asp:Label>
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+    <ContentTemplate>
+    <asp:Timer ID="Timer" runat="server" Interval="1000"></asp:Timer>
+    <asp:Label ID="DateTimelbl" runat="server" style="z-index: 1; Font-Size: 0.7vw; right: 4px; top: 19%; position: absolute; width: 23%; height: 70%; text-align: right; vertical-align: sub;" Text="Label" Font-Bold="True" Font-Names="Arial" ForeColor="Black"></asp:Label>
+    </ContentTemplate>
+    <Triggers>
+    <asp:AsyncPostBackTrigger ControlID="Timer" EventName="Tick"></asp:AsyncPostBackTrigger>
+    </Triggers>
+    </asp:UpdatePanel>
+</asp:Panel>
+</asp:Panel>
+</form>
+</body>
+</html>
